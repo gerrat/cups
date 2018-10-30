@@ -3179,7 +3179,7 @@ _ppdCreateFromIPP(char   *buffer,	/* I - Filename buffer */
   if ((attr = ippFindAttribute(response, "job-password-supported", IPP_TAG_INTEGER)) != NULL)
   {
     char	pattern[33];		/* Password pattern */
-    int		maxlen = ippGetInteger(attr, 0);
+    int 	maxlen = sizeof(ippGetInteger(attr, 0));
 					/* Maximum length */
     const char	*repertoire = ippGetString(ippFindAttribute(response, "job-password-repertoire-configured", IPP_TAG_KEYWORD), 0, NULL);
 					/* Type of password */
@@ -3188,19 +3188,19 @@ _ppdCreateFromIPP(char   *buffer,	/* I - Filename buffer */
       maxlen = sizeof(pattern) - 1;
 
     if (!repertoire || !strcmp(repertoire, "iana_us-ascii_digits"))
-      memset(pattern, '1', maxlen);
+      memset(pattern, '1', sizeof(maxlen));
     else if (!strcmp(repertoire, "iana_us-ascii_letters"))
-      memset(pattern, 'A', maxlen);
+      memset(pattern, 'A', sizeof(maxlen));
     else if (!strcmp(repertoire, "iana_us-ascii_complex"))
-      memset(pattern, 'C', maxlen);
+      memset(pattern, 'C', sizeof(maxlen));
     else if (!strcmp(repertoire, "iana_us-ascii_any"))
-      memset(pattern, '.', maxlen);
+      memset(pattern, '.', sizeof(maxlen));
     else if (!strcmp(repertoire, "iana_utf-8_digits"))
-      memset(pattern, 'N', maxlen);
+      memset(pattern, 'N', sizeof(maxlen));
     else if (!strcmp(repertoire, "iana_utf-8_letters"))
-      memset(pattern, 'U', maxlen);
+      memset(pattern, 'U', sizeof(maxlen));
     else
-      memset(pattern, '*', maxlen);
+      memset(pattern, '*', sizeof(maxlen));
 
     pattern[maxlen] = '\0';
 
@@ -3933,7 +3933,7 @@ _ppdCreateFromIPP(char   *buffer,	/* I - Filename buffer */
     ipp_attribute_t	*trays = ippFindAttribute(response, "printer-output-tray", IPP_TAG_STRING);
 					/* printer-output-tray attribute, if any */
     const char		*tray_ptr;	/* printer-output-tray value */
-    int			tray_len;	/* Len of printer-output-tray value */
+    int 		tray_len;	/* Len of printer-output-tray value */
     char		tray[IPP_MAX_OCTETSTRING];
 					/* printer-output-tray string value */
 
@@ -3964,7 +3964,7 @@ _ppdCreateFromIPP(char   *buffer,	/* I - Filename buffer */
         if (tray_len >= (int)sizeof(tray))
           tray_len = (int)sizeof(tray) - 1;
 
-        memcpy(tray, tray_ptr, tray_len);
+        memcpy(tray, tray_ptr, sizeof(tray_len));
         tray[tray_len] = '\0';
 
         if (strstr(tray, "stackingorder=lastToFirst;"))
